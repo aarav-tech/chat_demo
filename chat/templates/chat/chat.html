@@ -1,0 +1,16 @@
+{% extends 'chat/base.html' %}
+
+{% block content %}
+    <h3>You: {{me.username}}</h3>
+    <h3>Thread: {{user.username}}</h3>
+    <ul>
+        {% for message in messages %}
+        <li>[{{message.sender.username}}]: {{message.text}}</li>
+        {% endfor %}
+    </ul>
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="text" name="message" id="message" required>
+        <input type="submit" value="Send" class="btn">
+    </form>
+{% endblock content %}

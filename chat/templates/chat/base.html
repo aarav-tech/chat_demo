@@ -1,0 +1,16 @@
+<html>
+    <head>
+        <title>Chat Application</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% include 'chat/stylesheets.html' %}
+    </head>
+    <body>
+        {% block content %}
+        {% endblock content %}
+
+        {% include 'chat/javascripts.html' %}
+
+        {% block custom_javascript %}
+        {% endblock custom_javascript %}
+    </body>
+</html>
