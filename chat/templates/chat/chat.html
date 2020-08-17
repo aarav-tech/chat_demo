@@ -21,7 +21,6 @@
     const ws = new WebSocket(url)
     ws.onopen = function(event) {
         console.log("Connection is opened");
-        ws.send("Thanks for connecting");
     }
 
     ws.onmessage = function(event) {
