@@ -17,7 +17,7 @@
 
 {% block custom_javascript %}
 <script>
-    const url = 'ws://localhost:8000/ws/chat/';
+    const url = 'ws://localhost:8000/ws' + window.location.pathname;
     const ws = new WebSocket(url)
     ws.onopen = function(event) {
         console.log("Connection is opened");
@@ -28,7 +28,10 @@
         console.log("Message is received");
         const ul = document.getElementById('message-list')
         var li = document.createElement('li')
-        li.append(document.createTextNode(event.data))
+        var data = JSON.parse(event.data);
+        li.append(document.createTextNode(
+            '[' + data.username + ']:' + data.text
+        ))
         ul.append(li);
     }
 
