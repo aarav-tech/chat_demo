@@ -9,6 +9,7 @@ import json
 
 class ChatConsumer(AsyncConsumer):
     async def websocket_connect(self, event):
+        print("Inside connect")
         me = self.scope['user']
         other_username = self.scope['url_route']['kwargs']['username']
         other_user = await sync_to_async(User.objects.get)(username=other_username)

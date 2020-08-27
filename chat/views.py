@@ -15,6 +15,8 @@ from rest_framework.status import (
 )
 from rest_framework.response import Response
 
+from urllib.parse import parse_qs
+
 from chat.models import Thread, Message
 
 
@@ -27,25 +29,37 @@ class ThreadView(View):
     def get_object(self):
         other_username  = self.kwargs.get("username")
         self.other_user = get_user_model().objects.get(username=other_username)
-        obj = Thread.objects.get_or_create_personal_thread(self.request.user, self.other_user)
+        obj = Thread.objects.get_or_create_personal_thread(self.user, self.other_user)
         if obj == None:
             raise Http404
         return obj
 
     def get_context_data(self, **kwargs):
         context = {}
-        context['me'] = self.request.user
+        context['me'] = self.user
         context['thread'] = self.get_object()
         context['user'] = self.other_user
         context['messages'] = self.get_object().message_set.all()
         return context
 
     def get(self, request, **kwargs):
+        self.user = None
         if request.user.is_authenticated:
+            self.user = request.user
+        else:
+            try:
+                token = parse_qs(request.scope["query_string"].decode("utf8"))["token"][0]
+                token = Token.objects.get(key=token)
+                self.user = token.user
+            except KeyError:
+                pass
+        
+        if self.user:
             context = self.get_context_data(**kwargs)
             return render(request, self.template_name, context=context)
         else:
             return redirect('/admin/login/?next=' + request.path)
+
 
     def post(self, request, **kwargs):
         self.object = self.get_object()

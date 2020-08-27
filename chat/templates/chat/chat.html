@@ -17,7 +17,12 @@
 
 {% block custom_javascript %}
 <script>
-    const url = 'ws://localhost:8000/ws' + window.location.pathname;
+    let url = 'ws://localhost:8000/ws' + window.location.pathname;
+    const parts = window.location.href.split('?')
+    if (parts.length == 2) {
+        url += '?' + parts[1];
+    }
+
     const ws = new WebSocket(url)
     ws.onopen = function(event) {
         console.log("Connection is opened");
